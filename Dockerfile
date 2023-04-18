@@ -8,6 +8,11 @@ ENV NO_UPDATE_NOTIFIER=true \
   PYTHONUNBUFFERED=1
 WORKDIR ${APP_ROOT}
 
+# replace with edge repository to get the latest libreoffice version
+RUN echo 'https://dl-cdn.alpinelinux.org/alpine/edge/main' > /etc/apk/repositories && \
+  echo 'https://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories && \
+  apk update && apk upgrade --no-cache --available
+
 # Install LibreOffice & Common Fonts
 RUN apk --no-cache add bash libreoffice util-linux \
   ttf-freefont ttf-liberation && \
