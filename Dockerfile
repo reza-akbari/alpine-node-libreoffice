@@ -1,5 +1,3 @@
-# We want to stick with the lts-alpine tag, but need to ensure we explicitly track base images
-# FROM docker.io/node:lts-alpine
 FROM docker.io/node:18-alpine
 
 ARG APP_ROOT=/opt/app-root/src
@@ -9,22 +7,9 @@ ENV NO_UPDATE_NOTIFIER=true \
 WORKDIR ${APP_ROOT}
 
 # replace with edge repository to get the latest libreoffice version
-RUN echo 'https://dl-cdn.alpinelinux.org/alpine/edge/main' > /etc/apk/repositories && \
-  echo 'https://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories && \
+RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/main\nhttps://dl-cdn.alpinelinux.org/alpine/edge/community\n" > /etc/apk/repositories && \
   apk update && apk upgrade --no-cache --available
 
-# Install LibreOffice & Common Fonts
-RUN apk --no-cache add bash libreoffice util-linux \
-  ttf-freefont ttf-liberation && \
+# Install LibreOffice
+RUN apk --no-cache add openjdk8-jre libreoffice && \
   rm -rf /var/cache/apk/*
-
-# Install Microsoft Core Fonts
-RUN apk --no-cache add msttcorefonts-installer fontconfig && \
-  update-ms-fonts && \
-  fc-cache -f && \
-  rm -rf /var/cache/apk/*
-
-# Fix Python/LibreOffice Integration
-COPY support ${APP_ROOT}/support
-RUN chmod a+rx ${APP_ROOT}/support/bindPython.sh \
-  && ${APP_ROOT}/support/bindPython.sh
