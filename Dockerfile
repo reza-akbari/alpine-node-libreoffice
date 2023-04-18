@@ -10,7 +10,7 @@ WORKDIR ${APP_ROOT}
 
 # Install LibreOffice & Common Fonts
 RUN apk --no-cache add bash libreoffice util-linux \
-  ttf-droid-nonlatin ttf-droid ttf-dejavu ttf-freefont ttf-liberation && \
+  ttf-freefont ttf-liberation && \
   rm -rf /var/cache/apk/*
 
 # Install Microsoft Core Fonts
